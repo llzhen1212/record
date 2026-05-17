@@ -1,0 +1,298 @@
+:root {
+  --bg: #f4f6f8;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --main: #2563eb;
+  --danger: #dc2626;
+  --green: #16a34a;
+  --orange: #ea580c;
+  --radius: 18px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Noto Sans TC", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.topbar {
+  padding: 28px 20px;
+  background: #111827;
+  color: white;
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.topbar p {
+  margin: 8px 0 0;
+  color: #d1d5db;
+}
+
+.container {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.card h2 {
+  margin: 0 0 16px;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 700;
+}
+
+input,
+select,
+textarea,
+button {
+  font: inherit;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: white;
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+button {
+  border: none;
+  border-radius: 12px;
+  padding: 11px 16px;
+  background: var(--main);
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+button:hover {
+  filter: brightness(0.95);
+}
+
+.full {
+  margin-top: 14px;
+}
+
+.people-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.person-tag {
+  background: #eef2ff;
+  color: #3730a3;
+  border-radius: 999px;
+  padding: 7px 12px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.split-area {
+  margin-top: 18px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.split-title h3 {
+  margin: 0;
+}
+
+.split-title p {
+  margin: 6px 0 14px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.split-list {
+  display: grid;
+  gap: 10px;
+}
+
+.split-row {
+  display: grid;
+  grid-template-columns: 24px 1fr 160px;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.split-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+.split-row input[type="number"] {
+  padding: 9px 10px;
+}
+
+.submit-btn {
+  width: 100%;
+  margin-top: 18px;
+  padding: 13px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.summary-box {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+
+.summary-box p {
+  margin: 0 0 6px;
+  color: var(--muted);
+}
+
+.summary-box strong {
+  font-size: 24px;
+}
+
+.debt-list,
+.record-list {
+  display: grid;
+  gap: 10px;
+}
+
+.empty {
+  color: var(--muted);
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 12px;
+}
+
+.debt-item {
+  padding: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: #f9fafb;
+  font-weight: 800;
+}
+
+.record-item {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px;
+  background: #ffffff;
+}
+
+.record-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.record-title {
+  font-weight: 900;
+}
+
+.record-meta {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.record-note {
+  margin-top: 10px;
+  padding: 10px;
+  background: #f9fafb;
+  border-radius: 12px;
+  color: #374151;
+}
+
+.split-detail {
+  margin-top: 10px;
+  display: grid;
+  gap: 6px;
+  color: #374151;
+}
+
+.type-expense {
+  color: var(--orange);
+  font-weight: 900;
+}
+
+.type-income {
+  color: var(--green);
+  font-weight: 900;
+}
+
+.delete-btn {
+  background: var(--danger);
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+@media (max-width: 720px) {
+  .grid,
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  .split-row {
+    grid-template-columns: 24px 1fr;
+  }
+
+  .split-row input[type="number"] {
+    grid-column: 2 / 3;
+  }
+
+  .record-head {
+    flex-direction: column;
+  }
+}
