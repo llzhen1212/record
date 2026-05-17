@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>我的記帳本</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <h1>我的記帳本</h1>
+    <p>支出、收入、分帳、誰欠誰，一次處理。</p>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h2>新增分帳人</h2>
+
+      <div class="row">
+        <input id="personNameInput" type="text" placeholder="輸入名字，例如：小明" />
+        <button id="addPersonBtn" type="button">新增</button>
+      </div>
+
+      <div class="people-list" id="peopleList"></div>
+    </section>
+
+    <section class="card">
+      <h2>新增記帳</h2>
+
+      <form id="recordForm">
+        <div class="grid">
+          <label>
+            日期
+            <input id="dateInput" type="date" required />
+          </label>
+
+          <label>
+            類型
+            <select id="typeInput" required>
+              <option value="expense">支出</option>
+              <option value="income">收入</option>
+            </select>
+          </label>
+
+          <label>
+            金額
+            <input id="amountInput" type="number" min="1" step="1" placeholder="例如：500" required />
+          </label>
+
+          <label>
+            類別
+            <input id="categoryInput" type="text" placeholder="例如：吃飯、交通、代墊" required />
+          </label>
+
+          <label>
+            付款人 / 收款人
+            <select id="payerInput" required></select>
+          </label>
+        </div>
+
+        <label class="full">
+          備註
+          <textarea id="noteInput" placeholder="例如：晚餐、幫大家先付、現金付款"></textarea>
+        </label>
+
+        <div class="split-area">
+          <div class="split-title">
+            <h3>分帳人</h3>
+            <p>不會預設勾選。金額可不填，不填會自動平均剩餘金額。</p>
+          </div>
+
+          <div id="splitPeopleList" class="split-list"></div>
+        </div>
+
+        <button class="submit-btn" type="submit">新增紀錄</button>
+      </form>
+    </section>
+
+    <section class="summary-grid">
+      <div class="card">
+        <h2>總覽</h2>
+
+        <div class="summary-box">
+          <p>總支出</p>
+          <strong id="totalExpense">NT$0</strong>
+        </div>
+
+        <div class="summary-box">
+          <p>總收入</p>
+          <strong id="totalIncome">NT$0</strong>
+        </div>
+
+        <div class="summary-box">
+          <p>淨額</p>
+          <strong id="netTotal">NT$0</strong>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>誰欠誰</h2>
+        <div id="debtList" class="debt-list"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>明細</h2>
+      <div id="recordList" class="record-list"></div>
+    </section>
+  </main>
+</body>
+</html>
