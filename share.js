@@ -80,7 +80,9 @@ function renderPairData(data) {
     return;
   }
 
-  data.records.forEach((record) => {
+  data.records
+  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .forEach((record) => {
     const item = document.createElement("div");
     item.className = "pair-record-item";
 
