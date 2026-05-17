@@ -1,3 +1,4 @@
+const API_URL = "https://script.google.com/macros/s/AKfycbxWqevi5VEAa7pUACr2r9IcRwyeRGzha5m9xLZkMMXLH5TXLHPtxMi1kAXQTFgqGaas/exec";
 const STORAGE_KEY = "my_account_book_v1";
 
 let people = [];
@@ -22,6 +23,62 @@ const netTotal = document.getElementById("netTotal");
 const debtList = document.getElementById("debtList");
 const recordList = document.getElementById("recordList");
 
+function getAdminKey() {
+  let key = localStorage.getItem("account_book_admin_key");
+
+  if (!key) {
+    key = prompt("請輸入管理密碼");
+
+    if (key) {
+      localStorage.setItem("account_book_admin_key", key);
+    }
+  }
+
+  return key;
+}
+
+async function apiGet(action, params = {}) {
+  const url = new URL(API_URL);
+
+  url.searchParams.set("action", action);
+
+  Object.keys(params).forEach((key) => {
+    url.searchParams.set(key, params[key]);
+  });
+
+  const response = await fetch(url.toString());
+  const data = await response.json();
+
+  if (!data.ok) {
+    throw new Error(data.error || "讀取失敗");
+  }
+
+  return data;
+}
+
+async function apiPost(action, params = {}) {
+  const body = new URLSearchParams();
+
+  body.set("action", action);
+
+  Object.keys(params).forEach((key) => {
+    body.set(key, params[key]);
+  });
+
+  const response = await fetch(API_URL, {
+    method: "POST",
+    body
+  });
+
+  const data = await response.json();
+
+  if (!data.ok) {
+    throw new Error(data.error || "寫入失敗");
+  }
+
+  return data;
+}
+
 function createId(prefix) {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 }
@@ -38,40 +95,33 @@ function formatDate(dateString) {
 }
 
 function saveData() {
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify({
-      people,
-      records
-    })
-  );
+  // 資料已改由 Google Sheet 儲存
 }
 
-function loadData() {
-  const saved = localStorage.getItem(STORAGE_KEY);
+async function loadData() {
+  const data = await apiGet("getAll", {
+    adminKey: getAdminKey()
+  });
 
-  if (!saved) {
-    people = [
-      {
-        id: "me",
-        name: "我"
-      }
-    ];
-    records = [];
-    saveData();
-    return;
-  }
+  people = data.people.map((person) => ({
+    id: person.personId,
+    name: person.name,
+    token: person.token
+  }));
 
-  const data = JSON.parse(saved);
-  people = data.people || [];
-  records = data.records || [];
-
-  if (people.length === 0) {
-    people.push({
-      id: "me",
-      name: "我"
-    });
-  }
+  records = data.records.map((record) => ({
+    id: record.recordId,
+    date: record.date,
+    type: record.type,
+    amount: Number(record.amount),
+    category: record.category,
+    payerId: record.payerId,
+    note: record.note || "",
+    splits: record.splits.map((split) => ({
+      personId: split.personId,
+      amount: Number(split.amount)
+    }))
+  }));
 }
 
 function getPersonName(personId) {
@@ -87,7 +137,7 @@ function setTodayAsDefault() {
   dateInput.value = `${yyyy}-${mm}-${dd}`;
 }
 
-function addPerson() {
+async function addPerson() {
   const name = personNameInput.value.trim();
 
   if (!name) {
@@ -95,21 +145,20 @@ function addPerson() {
     return;
   }
 
-  const isDuplicate = people.some((person) => person.name === name);
+  try {
+    await apiPost("addPerson", {
+      adminKey: getAdminKey(),
+      name
+    });
 
-  if (isDuplicate) {
-    alert("這個人已經存在了");
-    return;
+    personNameInput.value = "";
+
+    await loadData();
+    render();
+
+  } catch (error) {
+    alert(error.message);
   }
-
-  people.push({
-    id: createId("person"),
-    name
-  });
-
-  personNameInput.value = "";
-  saveData();
-  render();
 }
 
 function calculateSplits(totalAmount) {
@@ -454,6 +503,14 @@ personNameInput.addEventListener("keydown", (event) => {
   }
 });
 
-loadData();
-setTodayAsDefault();
-render();
+async function init() {
+  try {
+    await loadData();
+    setTodayAsDefault();
+    render();
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+init();
