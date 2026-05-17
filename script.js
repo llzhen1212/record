@@ -1,5 +1,4 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbxWqevi5VEAa7pUACr2r9IcRwyeRGzha5m9xLZkMMXLH5TXLHPtxMi1kAXQTFgqGaas/exec";
-const STORAGE_KEY = "my_account_book_v1";
 
 let people = [];
 let records = [];
@@ -91,7 +90,7 @@ function formatMoney(amount) {
 
 function formatDate(dateString) {
   if (!dateString) return "";
-  return dateString.replaceAll("-", ".");
+  return String(dateString).slice(0, 10).replaceAll("-", ".");
 }
 
 function saveData() {
@@ -218,7 +217,7 @@ function roundMoney(amount) {
   return Math.round(Number(amount) * 100) / 100;
 }
 
-function addRecord(event) {
+async function addRecord(event) {
   event.preventDefault();
 
   const date = dateInput.value;
@@ -250,22 +249,27 @@ function addRecord(event) {
     splits = result;
   }
 
-  records.unshift({
-    id: createId("record"),
-    date,
-    type,
-    amount: roundMoney(amount),
-    category,
-    payerId,
-    splits,
-    note
-  });
+  try {
+    await apiPost("addRecord", {
+      adminKey: getAdminKey(),
+      date,
+      type,
+      amount,
+      category,
+      payerId,
+      note,
+      splits: JSON.stringify(splits)
+    });
 
-  recordForm.reset();
-  setTodayAsDefault();
+    recordForm.reset();
+    setTodayAsDefault();
 
-  saveData();
-  render();
+    await loadData();
+    render();
+
+  } catch (error) {
+    alert(error.message);
+  }
 }
 
 function deleteRecord(recordId) {
@@ -338,9 +342,32 @@ function renderPeople() {
   people.forEach((person) => {
     const tag = document.createElement("div");
     tag.className = "person-tag";
-    tag.textContent = person.name;
+
+    if (person.id === "me") {
+      tag.textContent = person.name;
+    } else {
+      const basePath = location.pathname.replace("index.html", "");
+      const shareUrl = `${location.origin}${basePath}share.html?token=${person.token}`;
+
+      tag.innerHTML = `
+        ${escapeHTML(person.name)}
+        <button
+          type="button"
+          onclick="copyText('${shareUrl}')"
+          style="margin-left: 8px; padding: 4px 8px; font-size: 12px;"
+        >
+          複製分享連結
+        </button>
+      `;
+    }
+
     peopleList.appendChild(tag);
   });
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text);
+  alert("已複製分享連結");
 }
 
 function renderPayerOptions() {
