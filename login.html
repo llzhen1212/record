@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">  <!--此網頁主要語言為繁體中文-->
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>帳友-您的記帳網站</title>
+        <link rel="stylesheet" href="./login.css" />
+    </head>
+
+    <body>
+        <main class="auth-page">
+            <section class="card">
+                <h1 class="section-title">帳友</h1>
+                <p class="section-subtitle">登入或註冊你的記帳帳號</p>
+
+                <div class="auth-tabs">  <!--切換登入和註冊-->
+                    <button class="tab-btn active" type="button">登入</button>
+                    <button class="tab-btn" type="button">註冊</button>
+                </div>
+            
+                <form id="loginForm" class="auth-form">  <!--登入表單-->
+                    <label for="loginEmail">Email</label>
+                    <input id="loginEmail" type="email" placeholder="請輸入Email"/>
+
+                    <label for="loginPassword">密碼</label>
+                    <input id="loginPassword" type="password" placeholder="請輸入密碼"/>
+
+                    <button class="submit-btn" type="submit">登入</button>
+                </form>
+
+            
+                <form id="registerForm" class="auth-form hidden">  <!--註冊表單-->
+                    <label for="registerEmail">Email</label>
+                    <input id="registerEmail" type="email" placeholder="請輸入Email"/>
+
+                    <label for="registerPassword">密碼</label>
+                    <input id="registerPassword" type="password" placeholder="請輸入密碼"/>
+
+                    <label for="confirmPassword">確認密碼</label>
+                    <input id="confirmPassword" type="password" placeholder="請再次輸入密碼"/>
+
+                    <label for="nickname">暱稱</label>
+                    <input id="nickname" type="text" placeholder="例如：小明、Jhon"/>
+
+                    <label for="defaultCurrency">預設幣別</label>
+                    <select id="defaultCurrency">
+                        <option value="TWD">TWD 臺幣</option>
+                        <option value="JPY">JPY 日圓</option>
+                        <option value="KRW">KRW 韓圜</option>
+                        <option value="USD">USD 美金</option>
+                    </select>
+
+                    <button class="submit-btn" type="submit">註冊</button>
+                </form>
+            </section>
+        </main>
+
+        <script src="./login.js"></script>
+    </body>
+</html>
