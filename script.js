@@ -108,19 +108,31 @@ async function loadData() {
     token: person.token
   }));
 
-  records = data.records.map((record) => ({
-    id: record.recordId,
-    date: record.date,
-    type: record.type,
-    amount: Number(record.amount),
-    category: record.category,
-    payerId: record.payerId,
-    note: record.note || "",
-    splits: record.splits.map((split) => ({
-      personId: split.personId,
-      amount: Number(split.amount)
+  records = data.records
+    .map((record) => ({
+      id: record.recordId,
+      date: record.date,
+      type: record.type,
+      amount: Number(record.amount),
+      category: record.category,
+      payerId: record.payerId,
+      note: record.note || "",
+      createdAt: record.createdAt || "",
+      splits: record.splits.map((split) => ({
+        personId: split.personId,
+        amount: Number(split.amount)
+      }))
     }))
-  }));
+    .sort((a, b) => {
+      const dateA = new Date(a.date).getTime();
+      const dateB = new Date(b.date).getTime();
+
+      if (dateA !== dateB) {
+        return dateB - dateA; // 日期新到舊
+      }
+
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
 }
 
 function getPersonName(personId) {
