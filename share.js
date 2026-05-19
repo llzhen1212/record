@@ -12,7 +12,7 @@ function formatMoney(amount) {
 
 function formatDate(dateString) {
   if (!dateString) return "";
-  return String(dateString).replaceAll("-", ".");
+  return String(dateString).slice(0, 10).replaceAll("-", ".");
 }
 
 function escapeHTML(text) {
