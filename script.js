@@ -440,10 +440,29 @@ function renderSplitPeople() {
   });
 }
 
+function getMyExpenseAmount(record) {
+  if (record.type !== "expense") return 0;
+
+  const mySplit = record.splits.find((split) => split.personId === "me");
+
+  // 有勾「我」：只算我的分帳金額
+  if (mySplit) {
+    return Number(mySplit.amount);
+  }
+
+  // 沒有分帳：如果付款人是我，整筆算我的支出
+  if (record.payerId === "me" && record.splits.length === 0) {
+    return Number(record.amount);
+  }
+
+  // 我只是幫別人代墊，而且我沒有勾自己：不算我的支出
+  return 0;
+}
+
 function renderSummary() {
   const expense = records
     .filter((record) => record.type === "expense")
-    .reduce((sum, record) => sum + Number(record.amount), 0);
+    .reduce((sum, record) => sum + getMyExpenseAmount(record), 0);
 
   const income = records
     .filter((record) => record.type === "income")
