@@ -103,10 +103,10 @@ function renderPairData(data) {
 
   if (balance > 0) {
     pairDebtResult.classList.add("receive");
-    pairDebtResult.textContent = `${personName} 欠 我 ${formatMoney(balance)}`;
+    pairDebtResult.textContent = `${personName} 須給 我 ${formatMoney(balance)}`;
   } else if (balance < 0) {
     pairDebtResult.classList.add("pay");
-    pairDebtResult.textContent = `我 欠 ${personName} ${formatMoney(Math.abs(balance))}`;
+    pairDebtResult.textContent = `我 須給 ${personName} ${formatMoney(Math.abs(balance))}`;
   } else {
     pairDebtResult.classList.add("clear");
     pairDebtResult.textContent = "目前互不相欠";
