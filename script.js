@@ -248,13 +248,13 @@ async function addRecord(event) {
 
   let splits = [];
 
-  if (type === "expense") {
+  if (type === "expense" || type === "repayment") {
     const result = calculateSplits(amount);
-
+  
     if (result === null) {
       return;
     }
-
+  
     splits = result;
   }
 
@@ -294,30 +294,50 @@ function deleteRecord(recordId) {
 function calculateDebts() {
   const debtMap = new Map();
 
+  function addDebt(debtorId, creditorId, amount) {
+    if (debtorId === creditorId) return;
+    if (amount === 0) return;
+
+    const pair = [debtorId, creditorId].sort();
+    const key = `${pair[0]}__${pair[1]}`;
+
+    let current = debtMap.get(key) || 0;
+
+    if (debtorId === pair[0] && creditorId === pair[1]) {
+      current += amount;
+    } else {
+      current -= amount;
+    }
+
+    debtMap.set(key, roundMoney(current));
+  }
+
   records.forEach((record) => {
-    if (record.type !== "expense") return;
+    if (record.type === "expense") {
+      record.splits.forEach((split) => {
+        const debtorId = split.personId;
+        const creditorId = record.payerId;
+        const amount = Number(split.amount);
 
-    record.splits.forEach((split) => {
-      const debtorId = split.personId;
-      const creditorId = record.payerId;
-      const amount = Number(split.amount);
+        if (amount <= 0) return;
 
-      if (debtorId === creditorId) return;
-      if (amount <= 0) return;
+        // 支出：分帳人欠付款人
+        addDebt(debtorId, creditorId, amount);
+      });
+    }
 
-      const pair = [debtorId, creditorId].sort();
-      const key = `${pair[0]}__${pair[1]}`;
+    if (record.type === "repayment") {
+      record.splits.forEach((split) => {
+        const debtorId = record.payerId;
+        const creditorId = split.personId;
+        const amount = Number(split.amount);
 
-      let current = debtMap.get(key) || 0;
+        if (amount <= 0) return;
 
-      if (debtorId === pair[0] && creditorId === pair[1]) {
-        current += amount;
-      } else {
-        current -= amount;
-      }
-
-      debtMap.set(key, roundMoney(current));
-    });
+        // 還款：還款人把欠款還給收款人，所以要抵銷
+        addDebt(debtorId, creditorId, -amount);
+      });
+    }
   });
 
   const debts = [];
@@ -464,10 +484,17 @@ function renderRecords() {
     const item = document.createElement("div");
     item.className = "record-item";
 
-    const typeText = record.type === "expense" ? "支出" : "收入";
-    const typeClass = record.type === "expense" ? "type-expense" : "type-income";
+    const typeTextMap = {
+      expense: "支出",
+      income: "收入",
+      repayment: "還款"
+    };
+    
+    const typeText = typeTextMap[record.type] || record.type;
+    const typeClass = record.type === "income" ? "type-income" : "type-expense";
 
-    const splitHTML = record.type === "expense" && record.splits.length > 0
+    const splitHTML =
+    (record.type === "expense" || record.type === "repayment") &&record.splits.length > 0
     ? `
       <div class="split-detail">
         <strong>分帳明細</strong>
