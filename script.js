@@ -470,14 +470,18 @@ function renderRecords() {
     const typeText = record.type === "expense" ? "支出" : "收入";
     const typeClass = record.type === "expense" ? "type-expense" : "type-income";
 
-    const splitHTML =
-      record.type === "expense" && record.splits.length > 0
-        ? record.splits
-            .map((split) => {
-              return `<div>${getPersonName(split.personId)}：${formatMoney(split.amount)}</div>`;
-            })
-            .join("")
-        : `<div>這筆沒有分帳</div>`;
+    const splitHTML = record.type === "expense" && record.splits.length > 0
+    ? `
+      <div class="split-detail">
+        <strong>分帳明細</strong>
+        ${record.splits
+          .map((split) => {
+            return `<div>${getPersonName(split.personId)}：${formatMoney(split.amount)}</div>`;
+          })
+          .join("")}
+      </div>
+    `
+    : "";
 
     const noteHTML = record.note
       ? `<div class="record-note">備註：${escapeHTML(record.note)}</div>`
