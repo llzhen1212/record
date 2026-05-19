@@ -124,16 +124,13 @@ async function loadData() {
       }))
     }))
     .sort((a, b) => {
-      const dateA = new Date(a.date).getTime();
-      const dateB = new Date(b.date).getTime();
-
-      if (dateA !== dateB) {
-        return dateB - dateA; // 日期新到舊
+      if (a.date !== b.date) {
+        return String(b.date).localeCompare(String(a.date));
       }
 
-      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      return String(b.createdAt || "").localeCompare(String(a.createdAt || ""));
     });
-}
+  }
 
 function getPersonName(personId) {
   const person = people.find((item) => item.id === personId);
