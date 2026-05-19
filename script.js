@@ -509,10 +509,7 @@ function renderRecords() {
 
       ${noteHTML}
 
-      <div class="split-detail">
-        <strong>分帳明細</strong>
-        ${splitHTML}
-      </div>
+      ${splitHTML}
     `;
 
     recordList.appendChild(item);
