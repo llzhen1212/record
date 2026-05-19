@@ -135,7 +135,7 @@ function renderPairData(data) {
         .map((debt) => {
           const fromName = debt.from === "me" ? "我" : personName;
           const toName = debt.to === "me" ? "我" : personName;
-          const actionText = debt.type === "repayment" ? "還給" : "欠";
+          const actionText = debt.type === "repayment" ? "還給" : "須給";
 
           return `
             <div>
