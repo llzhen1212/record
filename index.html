@@ -3,19 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>我的記帳本</title>
+  <title>記帳！！！</title>
   <link rel="stylesheet" href="style.css" />
   <script src="script.js" defer></script>
 </head>
 <body>
   <header class="topbar">
-    <h1>我的記帳本</h1>
-    <p>支出、收入、分帳、誰欠誰，一次處理。</p>
+    <h1>記帳GoGo</h1>
   </header>
 
   <main class="container">
     <section class="card">
-      <h2>新增分帳人</h2>
+      <h2>分帳人</h2>
 
       <div class="row">
         <input id="personNameInput" type="text" placeholder="輸入名字，例如：小明" />
@@ -45,12 +44,12 @@
 
           <label>
             金額
-            <input id="amountInput" type="number" min="1" step="1" placeholder="例如：500" required />
+            <input id="amountInput" type="number" min="1" step="1" required />
           </label>
 
           <label>
             類別
-            <input id="categoryInput" type="text" placeholder="例如：吃飯、交通、代墊" required />
+            <input id="categoryInput" type="text" required />
           </label>
 
           <label>
@@ -61,13 +60,13 @@
 
         <label class="full">
           備註
-          <textarea id="noteInput" placeholder="例如：晚餐、幫大家先付、現金付款"></textarea>
+          <textarea id="noteInput"></textarea>
         </label>
 
         <div class="split-area">
           <div class="split-title">
             <h3>分帳人</h3>
-            <p>不會預設勾選。金額可不填，不填會自動平均剩餘金額。</p>
+            <p>不填會自動平均剩餘金額</p>
           </div>
 
           <div id="splitPeopleList" class="split-list"></div>
