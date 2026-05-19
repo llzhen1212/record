@@ -81,27 +81,38 @@ function renderPairData(data) {
   }
 
   data.records
-  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+  .sort((a, b) => {
+    if (a.date !== b.date) {
+      return String(b.date).localeCompare(String(a.date));
+    }
+
+    return String(b.createdAt || "").localeCompare(String(a.createdAt || ""));
+  })
   .forEach((record) => {
     const item = document.createElement("div");
     item.className = "pair-record-item";
 
-    const debtsHTML = record.pairDebts
-      .map((debt) => {
-        const fromName = debt.from === "me" ? "我" : personName;
-        const toName = debt.to === "me" ? "我" : personName;
+    cconst debtsHTML = record.pairDebts
+  .map((debt) => {
+    const fromName = debt.from === "me" ? "我" : personName;
+    const toName = debt.to === "me" ? "我" : personName;
+    const actionText = debt.type === "repayment" ? "還給" : "欠";
 
-        return `
-          <div>
-            ${fromName} 欠 ${toName} ${formatMoney(debt.amount)}
-          </div>
-        `;
-      })
-      .join("");
+    return `
+      <div>
+        ${fromName} ${actionText} ${toName} ${formatMoney(debt.amount)}
+      </div>
+    `;
+  })
+  .join("");
 
     const noteHTML = record.note
       ? `<div class="pair-record-note">備註：${escapeHTML(record.note)}</div>`
       : "";
+
+    const payerHTML = record.payerId !== "me"
+    ? `<div class="pair-record-meta">付款人：${escapeHTML(record.payerName)}</div>`
+    : "";
 
     item.innerHTML = `
       <div class="pair-record-title">
@@ -110,9 +121,7 @@ function renderPairData(data) {
         ｜${formatMoney(record.amount)}
       </div>
 
-      <div class="pair-record-meta">
-        付款人：${escapeHTML(record.payerName)}
-      </div>
+      ${payerHTML}
 
       ${noteHTML}
 
