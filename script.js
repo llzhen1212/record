@@ -487,6 +487,11 @@ function renderRecords() {
       ? `<div class="record-note">備註：${escapeHTML(record.note)}</div>`
       : "";
 
+    const payerHTML = record.payerId !== "me"
+    ? `<div class="record-meta">
+        ${record.type === "expense" ? "付款人" : "收款人"}：${getPersonName(record.payerId)}</div>`
+    : "";
+
     item.innerHTML = `
       <div class="record-head">
         <div>
@@ -497,14 +502,9 @@ function renderRecords() {
             ｜${formatMoney(record.amount)}
           </div>
 
-          <div class="record-meta">
-            ${record.type === "expense" ? "付款人" : "收款人"}：${getPersonName(record.payerId)}
-          </div>
+          ${payerHTML}
         </div>
 
-        <button class="delete-btn" type="button" onclick="deleteRecord('${record.id}')">
-          刪除
-        </button>
       </div>
 
       ${noteHTML}
